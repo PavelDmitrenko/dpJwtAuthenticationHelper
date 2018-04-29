@@ -19,31 +19,13 @@ namespace dpJwtAuthenticationHelper
 		private readonly IDataSerializer<AuthenticationTicket> ticketSerializer;
 		private readonly IDataProtector dataProtector;
 
-		/// <summary>
-		/// Create a new instance of the <see cref="JwtAuthTicketFormat"/>
-		/// </summary>
-		/// <param name="validationParameters">
-		/// instance of <see cref="TokenValidationParameters"/> containing the parameters you
-		/// configured for your application
-		/// </param>
-		/// <param name="ticketSerializer">
-		/// an implementation of <see cref="IDataSerializer{TModel}"/>. The default implemenation can
-		/// also be passed in"/&gt;
-		/// </param>
-		/// <param name="dataProtector">
-		/// an implementation of <see cref="IDataProtector"/> used to securely encrypt and decrypt
-		/// the authentication ticket.
-		/// </param>
 		public JwtAuthTicketFormat(TokenValidationParameters validationParameters,
 			IDataSerializer<AuthenticationTicket> ticketSerializer,
 			IDataProtector dataProtector)
 		{
-			this.validationParameters = validationParameters ??
-				throw new ArgumentNullException($"{nameof(validationParameters)} cannot be null");
-			this.ticketSerializer = ticketSerializer ??
-				throw new ArgumentNullException($"{nameof(ticketSerializer)} cannot be null"); ;
-			this.dataProtector = dataProtector ??
-				throw new ArgumentNullException($"{nameof(dataProtector)} cannot be null");
+			this.validationParameters = validationParameters ?? throw new ArgumentNullException($"{nameof(validationParameters)} cannot be null");
+			this.ticketSerializer = ticketSerializer ?? throw new ArgumentNullException($"{nameof(ticketSerializer)} cannot be null"); ;
+			this.dataProtector = dataProtector ?? throw new ArgumentNullException($"{nameof(dataProtector)} cannot be null");
 		}
 
 		/// <summary>
@@ -52,17 +34,9 @@ namespace dpJwtAuthenticationHelper
 		/// </summary>
 		/// <param name="protectedText"></param>
 		/// <returns></returns>
-		public AuthenticationTicket Unprotect(string protectedText)
-			=> Unprotect(protectedText, null);
+		public AuthenticationTicket Unprotect(string protectedText) => Unprotect(protectedText, null);
+		public string Protect(AuthenticationTicket data) => Protect(data, null);
 
-		/// <summary>
-		/// Does the exact opposite of the Protect methods i.e. converts an encrypted string back to
-		/// the original <see cref="AuthenticationTicket"/> instance containing the JWT and claims.
-		/// Additionally, optionally pass in a purpose string.
-		/// </summary>
-		/// <param name="protectedText"></param>
-		/// <param name="purpose"></param>
-		/// <returns></returns>
 		public AuthenticationTicket Unprotect(string protectedText, string purpose)
 		{
 			var authTicket = ticketSerializer.Deserialize(
@@ -88,7 +62,11 @@ namespace dpJwtAuthenticationHelper
 					throw new ArgumentException($"Algorithm must be '{Algorithm}'");
 				}
 			}
-			catch (Exception)
+			catch (SecurityTokenExpiredException expiredException)
+			{
+				return null;
+			}
+			catch (Exception generalException)
 			{
 				return null;
 			}
@@ -96,14 +74,7 @@ namespace dpJwtAuthenticationHelper
 			return authTicket;
 		}
 
-		/// <summary>
-		/// Protect the authentication ticket and convert it to an encrypted string before sending
-		/// out to the users.
-		/// </summary>
-		/// <param name="data">an instance of <see cref="AuthenticationTicket"/></param>
-		/// <returns>encrypted string representing the <see cref="AuthenticationTicket"/></returns>
-		public string Protect(AuthenticationTicket data) => Protect(data, null);
-
+	
 		/// <summary>
 		/// Protect the authentication ticket and convert it to an encrypted string before sending
 		/// out to the users. Additionally, specify the purpose of encryption, default is null.

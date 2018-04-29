@@ -29,8 +29,9 @@ namespace dpJwtAuthenticationHelper.Extensions
 		/// <returns></returns>
 		public static IServiceCollection AddJwtAuthenticationWithProtectedCookie(this IServiceCollection services,
 			TokenValidationParameters tokenValidationParams,
-			string applicationDiscriminator = null,
-			AuthUrlOptions authUrlOptions = null)
+			TimeSpan expiration,
+			AuthUrlOptions authUrlOptions = null, 
+			string applicationDiscriminator = null)
 		{
 			if (tokenValidationParams == null)
 			{
@@ -50,9 +51,8 @@ namespace dpJwtAuthenticationHelper.Extensions
 			//     cookieless auth (such as with a Web API) the data protection and serialisation
 			//     dependencies won't be needed. You simply need to set the validation params and add
 			//     the token generator dependencies and use the right authentication extension below.
-			services.AddDataProtection(options => options.ApplicationDiscriminator =
-				$"{applicationDiscriminator ?? hostingEnvironment.ApplicationName}")
-				.SetApplicationName($"{applicationDiscriminator ?? hostingEnvironment.ApplicationName}");
+			services.AddDataProtection(options => options.ApplicationDiscriminator = $"{applicationDiscriminator ?? hostingEnvironment.ApplicationName}") 
+									.SetApplicationName($"{applicationDiscriminator ?? hostingEnvironment.ApplicationName}");
 
 			services.AddScoped<IDataSerializer<AuthenticationTicket>, TicketSerializer>();
 
@@ -74,7 +74,7 @@ namespace dpJwtAuthenticationHelper.Extensions
 				// Perhaps in the future I can add some kind of hooks in the token generator that can
 				// let the referencing application know that the token has expired and the developer
 				// can then request a new token without the user having to re-login.
-				options.Cookie.Expiration = TimeSpan.FromMinutes(1);
+				options.Cookie.Expiration = expiration;
 
 				// Specify the TicketDataFormat to use to validate/create the ASP.NET authentication
 				// ticket. Its important that the same validation parameters are passed to this class
@@ -91,13 +91,10 @@ namespace dpJwtAuthenticationHelper.Extensions
 						$"{applicationDiscriminator ?? hostingEnvironment.ApplicationName}-Auth1"
 					}));
 
-				options.LoginPath = authUrlOptions != null ?
-					new PathString(authUrlOptions.LoginPath)
-					: new PathString("/Account/Login");
-				options.LogoutPath = authUrlOptions != null ?
-					new PathString(authUrlOptions.LogoutPath)
-					: new PathString("/Account/Logout");
+				options.LoginPath = authUrlOptions != null ? new PathString(authUrlOptions.LoginPath) : new PathString("/Account/Login");
+				options.LogoutPath = authUrlOptions != null ? new PathString(authUrlOptions.LogoutPath) : new PathString("/Account/Logout");
 				options.AccessDeniedPath = options.LoginPath;
+
 				options.ReturnUrlParameter = authUrlOptions?.ReturnUrlParameter ?? "returnUrl";
 			});
 
