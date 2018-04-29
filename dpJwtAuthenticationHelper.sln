@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27428.2015
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "dpJwtAuthenticationHelper", "dpJwtAuthenticationHelper.csproj", "{87BE6F5A-74AA-4D37-A4DE-AAD7E4CB3CAE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{87BE6F5A-74AA-4D37-A4DE-AAD7E4CB3CAE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{87BE6F5A-74AA-4D37-A4DE-AAD7E4CB3CAE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{87BE6F5A-74AA-4D37-A4DE-AAD7E4CB3CAE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{87BE6F5A-74AA-4D37-A4DE-AAD7E4CB3CAE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {0B0F04C7-C51F-4130-8032-6DFDE619DBFE}
+	EndGlobalSection
+EndGlobal
