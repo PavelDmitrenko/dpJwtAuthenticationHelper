@@ -1,4 +1,5 @@
-﻿using dpJwtAuthenticationHelper.Types;
+﻿using System;
+using dpJwtAuthenticationHelper.Types;
 using Microsoft.IdentityModel.Tokens;
 
 namespace dpJwtAuthenticationHelper.Extensions
@@ -6,12 +7,13 @@ namespace dpJwtAuthenticationHelper.Extensions
     public static class TokenValidationParametersExtensions
     {
         public static TokenOptions ToTokenOptions(this TokenValidationParameters tokenValidationParameters,
-            int tokenExpiryInMinutes = 5)
+            TimeSpan tokenExpiry)
         {
             return new TokenOptions(tokenValidationParameters.ValidIssuer,
                 tokenValidationParameters.ValidAudience,
                 tokenValidationParameters.IssuerSigningKey,
-                tokenExpiryInMinutes);
+	            tokenExpiry
+			  );
         }
     }
 }

@@ -12,17 +12,6 @@ namespace dpJwtAuthenticationHelper.Types
 		/// <summary>
 		/// Creates a new instance of <see cref="TokenOptions"/>
 		/// </summary>
-		/// <param name="issuer">
-		/// Required. Issuer of the token, usually, your web application URL but could be any string
-		/// </param>
-		/// <param name="audience">
-		/// Required. Audience of the token i.e. who the token is for. Could be any string
-		/// </param>
-		/// <param name="signingKey">
-		/// Required. An instance of <see cref="SecurityKey"/> containing the encoded 128-bit string.
-		/// Any string that is sufficiently long and unguessable will do.
-		/// </param>
-		/// <param name="tokenExpiryInMinutes">Defaults to 5 minutes but can be longer or shorter.</param>
 
 		public SecurityKey SigningKey { get; }
 
@@ -30,12 +19,12 @@ namespace dpJwtAuthenticationHelper.Types
 
 		public string Audience { get; }
 
-		public int TokenExpiryInMinutes { get; }
+		public TimeSpan TokenExpiry { get; }
 
 		public TokenOptions(string issuer,
 							string audience,
 							SecurityKey signingKey,
-							int tokenExpiryInMinutes = 5)
+							TimeSpan tokenExpiry)
 		{
 			if (string.IsNullOrWhiteSpace(audience))
 			{
@@ -49,10 +38,9 @@ namespace dpJwtAuthenticationHelper.Types
 
 			Audience = audience;
 			Issuer = issuer;
-			SigningKey = signingKey ??
-				throw new ArgumentNullException(
-					$"{nameof(SigningKey)} is mandatory in order to generate a JWT!");
-			TokenExpiryInMinutes = tokenExpiryInMinutes;
+			SigningKey = signingKey ?? throw new ArgumentNullException($"{nameof(SigningKey)} is mandatory in order to generate a JWT!");
+
+			TokenExpiry = tokenExpiry;
 		}
 	}
 

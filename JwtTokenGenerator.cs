@@ -29,9 +29,9 @@ namespace dpJwtAuthenticationHelper
 					$"An instance of valid {nameof(TokenOptions)} must be passed in order to generate a JWT!"); ;
 		}
 
-		public string GenerateAccessToken(string userName, IEnumerable<Claim> userClaims)
+		public string GenerateAccessToken(string userName, IEnumerable<Claim> userClaims, TimeSpan expiration)
 		{
-			var expiration = TimeSpan.FromMinutes(this.tokenOptions.TokenExpiryInMinutes);
+	
 			var jwt = new JwtSecurityToken(issuer: this.tokenOptions.Issuer,
 										   audience: this.tokenOptions.Audience,
 										   claims: MergeUserClaimsWithDefaultClaims(userName, userClaims),
@@ -47,10 +47,10 @@ namespace dpJwtAuthenticationHelper
 		}
 
 		public TokenWithClaimsPrincipal GenerateAccessTokenWithClaimsPrincipal(string userName,
-			IEnumerable<Claim> userClaims)
+			IEnumerable<Claim> userClaims, TimeSpan expiration)
 		{
 			var userClaimList = userClaims.ToList();
-			var accessToken = this.GenerateAccessToken(userName, userClaimList);
+			var accessToken = this.GenerateAccessToken(userName, userClaimList, expiration);
 
 			return new TokenWithClaimsPrincipal()
 			{
