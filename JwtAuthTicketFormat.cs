@@ -24,7 +24,7 @@ namespace dpJwtAuthenticationHelper
 			IDataProtector dataProtector)
 		{
 			this.validationParameters = validationParameters ?? throw new ArgumentNullException($"{nameof(validationParameters)} cannot be null");
-			this.ticketSerializer = ticketSerializer ?? throw new ArgumentNullException($"{nameof(ticketSerializer)} cannot be null"); ;
+			this.ticketSerializer = ticketSerializer ?? throw new ArgumentNullException($"{nameof(ticketSerializer)} cannot be null");
 			this.dataProtector = dataProtector ?? throw new ArgumentNullException($"{nameof(dataProtector)} cannot be null");
 		}
 
@@ -62,11 +62,11 @@ namespace dpJwtAuthenticationHelper
 					throw new ArgumentException($"Algorithm must be '{Algorithm}'");
 				}
 			}
-			catch (SecurityTokenExpiredException expiredException)
+			catch (SecurityTokenExpiredException)
 			{
 				return null;
 			}
-			catch (Exception generalException)
+			catch (Exception)
 			{
 				return null;
 			}

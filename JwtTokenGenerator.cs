@@ -26,19 +26,19 @@ namespace dpJwtAuthenticationHelper
 		{
 			this.tokenOptions = tokenOptions ??
 				throw new ArgumentNullException(
-					$"An instance of valid {nameof(TokenOptions)} must be passed in order to generate a JWT!"); ;
+					$"An instance of valid {nameof(TokenOptions)} must be passed in order to generate a JWT!");
 		}
 
 		public string GenerateAccessToken(string userName, IEnumerable<Claim> userClaims, TimeSpan expiration)
 		{
 	
-			var jwt = new JwtSecurityToken(issuer: this.tokenOptions.Issuer,
-										   audience: this.tokenOptions.Audience,
+			var jwt = new JwtSecurityToken(issuer: tokenOptions.Issuer,
+										   audience: tokenOptions.Audience,
 										   claims: MergeUserClaimsWithDefaultClaims(userName, userClaims),
 										   notBefore: DateTime.UtcNow,
 										   expires: DateTime.UtcNow.Add(expiration),
 										   signingCredentials: new SigningCredentials(
-											   this.tokenOptions.SigningKey,
+											   tokenOptions.SigningKey,
 											   SecurityAlgorithms.HmacSha256));
 
 			var accessToken = new JwtSecurityTokenHandler().WriteToken(jwt);
@@ -50,7 +50,7 @@ namespace dpJwtAuthenticationHelper
 			IEnumerable<Claim> userClaims, TimeSpan expiration)
 		{
 			var userClaimList = userClaims.ToList();
-			var accessToken = this.GenerateAccessToken(userName, userClaimList, expiration);
+			var accessToken = GenerateAccessToken(userName, userClaimList, expiration);
 
 			return new TokenWithClaimsPrincipal()
 			{

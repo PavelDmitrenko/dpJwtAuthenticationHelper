@@ -37,7 +37,7 @@ namespace dpJwtAuthenticationHelper.Extensions
 			{
 				throw new ArgumentNullException(
 					$"{nameof(tokenValidationParams)} is a required parameter. " +
-					$"Please make sure you've provided a valid instance with the appropriate values configured.");
+					"Please make sure you\'ve provided a valid instance with the appropriate values configured.");
 			}
 
 			var hostingEnvironment = services.BuildServiceProvider().GetService<IHostingEnvironment>();
